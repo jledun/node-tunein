@@ -3,6 +3,7 @@
 const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
+const BrowseHistory = new require('./browseHistory.js');
 
 module.exports = class tunein {
 
@@ -11,8 +12,15 @@ module.exports = class tunein {
   }
 
   reset() {
+    if (this.histo) {
+      this.histo.reset();
+    }else{
+      this.histo = new BrowseHistory();
+    }
     this.url = {};
     this.keys = [];
+    this.url.filter = {};
+    this.browseHistory = [];
     this.url.protocol = "http";
     this.url.host = "opml.radiotime.com";
     this.initSearch();
@@ -20,9 +28,9 @@ module.exports = class tunein {
 
   get() {
     return new Promise( (resolve, reject) => {
-      let tmpurl = this.url;
-      tmpurl.search = querystring.stringify(this.url.search);
-      console.log( url.format(tmpurl) );
+      let tmpurl = JSON.parse( JSON.stringify( this.histo.getCurrent() ) );
+      tmpurl.search = querystring.stringify(tmpurl.search);
+      if ( this.filter ) tmpurl.search += `&${querystring.stringify(this.url.filter)}`;
       let req = http.get( url.format(tmpurl), (res) => {
         let tuneinRes = "";
         res.on('data', (chunk) => tuneinRes += chunk);
@@ -61,8 +69,9 @@ module.exports = class tunein {
     this.url.search = {render: "json"};
   }
 
-  browse( category ) {
+  browse( category, filter ) {
     let cat = category || '';
+    let fil = filter || '';
     this.url.pathname = "Browse.ashx";
     this.initSearch();
     if ( cat ) {
@@ -72,6 +81,10 @@ module.exports = class tunein {
         this.url.search.id = cat;
       }
     }
+    if ( filter ) {
+      this.url.filter = fil;
+    }
+    this.histo.add( this.url );
     return this.get();
   }
 
