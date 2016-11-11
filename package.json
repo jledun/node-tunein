@@ -1,0 +1,19 @@
+{
+  "name": "node-tunein",
+  "version": "1.0.0",
+  "description": "a nodejs wrapper for tunein web radios",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@iohub:node-tunein"
+  },
+  "keywords": [
+    "tunein",
+    "webradios"
+  ],
+  "author": "Julien Ledun <j.ledun@iosystems.fr>",
+  "license": "MIT"
+}

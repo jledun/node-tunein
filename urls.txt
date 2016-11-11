@@ -1,0 +1,1 @@
+        self._base_uri = 'http://opml.radiotime.com/%s'
