@@ -15,5 +15,10 @@
     "webradios"
   ],
   "author": "Julien Ledun <j.ledun@iosystems.fr>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "opml-to-json": "0.0.3",
+    "opmlparser": "^0.8.0",
+    "request": "^2.78.0"
+  }
 }
