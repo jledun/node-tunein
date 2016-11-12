@@ -24,6 +24,7 @@ module.exports = class BrowseHistory {
   }
 
   getCurrent() {
+    if ( this.index < 0 ) return {};
     return this.histo[ this.index ].url;
   }
 

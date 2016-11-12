@@ -43,21 +43,25 @@ module.exports = class tunein {
     });
   }
 
+  parseURL( strUrl ) {
+    let parsedurl = url.parse( strUrl );
+    parsedurl.query = querystring.parse( parsedurl.query );
+    console.log( parsedurl );
+    return parsedurl;
+  }
+
   parseResult( data ) {
     if ( data.head.status != 200 ) return new Error(`TuneIn Request error : ${data.head.fault}`);
-    switch (data.head.title) {
-      case "Browse":
-        data.body.forEach( (elm) => {
-          if ( this.keys.indexOf( elm.key ) === -1 ) this.keys.push( elm.key );
+    data.body.forEach( (elm) => {
+      if ( typeof elm.URL != "undefined") elm.URL = this.parseURL( elm.URL );
+      if ( typeof elm.URL.query.c != undefined ) 
+        if ( this.keys.indexOf( elm.key ) === -1 ) this.keys.push( elm.key );
+      if ( typeof elm.children != "undefined") {
+        elm.children.forEach( (child) => {
+          child.URL = this.parseURL( child.URL );
         });
-        break;
-
-      default:
-        data.body.forEach( (elm) => {
-          if ( typeof elm.children != "undefined") elm.children = JSON.stringify(elm.children);
-        });
-        break;
-    }
+      }
+    });
     return data;
   }
 
