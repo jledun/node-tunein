@@ -12,7 +12,8 @@ module.exports = class tunein {
   }
 
   reset() {
-    if (this.histo) {
+    // init browse history
+    if ( this.histo ) {
       this.histo.reset();
     }else{
       this.histo = new BrowseHistory();
@@ -28,9 +29,13 @@ module.exports = class tunein {
 
   get() {
     return new Promise( (resolve, reject) => {
+      // copy url of current element in browse history
       let tmpurl = JSON.parse( JSON.stringify( this.histo.getCurrent() ) );
+      // stringify url
       tmpurl.search = querystring.stringify(tmpurl.search);
+      // add filter if exists
       if ( this.filter ) tmpurl.search += `&${querystring.stringify(this.url.filter)}`;
+      // get data from radiotime.com
       let req = http.get( url.format(tmpurl), (res) => {
         let tuneinRes = "";
         res.on('data', (chunk) => tuneinRes += chunk);
@@ -46,16 +51,18 @@ module.exports = class tunein {
   parseURL( strUrl ) {
     let parsedurl = url.parse( strUrl );
     parsedurl.query = querystring.parse( parsedurl.query );
-    console.log( parsedurl );
     return parsedurl;
   }
 
   parseResult( data ) {
     if ( data.head.status != 200 ) return new Error(`TuneIn Request error : ${data.head.fault}`);
     data.body.forEach( (elm) => {
-      if ( typeof elm.URL != "undefined") elm.URL = this.parseURL( elm.URL );
-      if ( typeof elm.URL.query.c != undefined ) 
-        if ( this.keys.indexOf( elm.key ) === -1 ) this.keys.push( elm.key );
+      if ( typeof elm.URL != "undefined") {
+        elm.URL = this.parseURL( elm.URL );
+        // store main categories
+        if ( typeof elm.URL.query != "undefined" && typeof elm.URL.query.c != undefined ) 
+          if ( this.keys.indexOf( elm.key ) === -1 ) this.keys.push( elm.key );
+      }
       if ( typeof elm.children != "undefined") {
         elm.children.forEach( (child) => {
           child.URL = this.parseURL( child.URL );
@@ -65,15 +72,31 @@ module.exports = class tunein {
     return data;
   }
 
-  getRoot() {
-    return this.elements;
+  getKeys() {
+    // return stored main categories
+    return this.keys;
+  }
+  getBrowseHistory() {
+    // return browse history
+    return this.histo.content();
   }
 
   initSearch() {
+    // set default to json instead of opml
     this.url.search = {render: "json"};
   }
 
+  browsePrevious() {
+    this.histo.previous();
+    return this.get();
+  }
+  browseNext() {
+    this.histo.next();
+    return this.get();
+  }
+
   browse( category, filter ) {
+    // browse commands
     let cat = category || '';
     let fil = filter || '';
     this.url.pathname = "Browse.ashx";
@@ -93,6 +116,7 @@ module.exports = class tunein {
   }
 
   search( chunk ) {
+    // search in ratiotime repository
     this.url.pathname = "Search.ashx";
     this.initSearch();
     this.url.search.query = chunk;
