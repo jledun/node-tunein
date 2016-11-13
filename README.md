@@ -10,6 +10,7 @@ This project needs a lot of improvements and completed with tests, doc, ...
 ```
 npm install --save node-tunein
 ```
+This projects is developped and tested with nodejs-v7.1.0
 # Usage
 ```javascript
 "use strict";
