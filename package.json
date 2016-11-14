@@ -1,6 +1,6 @@
 {
   "name": "node-tunein",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "a nodejs wrapper for tunein web radios",
   "main": "tunein.js",
   "scripts": {
