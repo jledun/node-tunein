@@ -15,7 +15,7 @@ This projects is developped and tested with nodejs-v7.1.0
 ```javascript
 "use strict";
 
-let TuneIn = require('./tunein.js');
+let TuneIn = require('node-tunein');
 let tunein = new TuneIn();
 tunein.browse()
 .then( (data) => console.log(data) )
