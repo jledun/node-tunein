@@ -40,6 +40,7 @@ Change browse entry parameters to an object with :
 * c,
 * id,
 * whatever filter field provided by opml.radiotime.com
+
 # Licence
 The MIT License (MIT)
 Copyright (c) 2016 Julien Ledun <j.ledun@iosystems.fr>
