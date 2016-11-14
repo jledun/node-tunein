@@ -32,6 +32,14 @@ All returned URLs are parsed with url and querystring native modules of NodeJS.
 Returned objects are list of categories and/or webradios, client needs to parse objects to know what to do with :(
 
 Returned objects can have children (an array of library elements)
+# Future step
+Change browse entry parameters to an object with :
+* guide_id,
+* genre_id,
+* filter,
+* c,
+* id,
+* whatever filter field provided by opml.radiotime.com
 # Licence
 The MIT License (MIT)
 Copyright (c) 2016 Julien Ledun <j.ledun@iosystems.fr>
